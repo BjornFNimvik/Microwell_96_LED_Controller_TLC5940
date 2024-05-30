@@ -10,28 +10,32 @@
 #define BLANK   10    //TLC5940 Blank all outputs. When BLANK = H, all OUTn outputs are forced OFF.G S counter is also reset. When BLANK = L, OUTn are controlled by grayscale PWM control.
 #define GSCLK   5     //TLC5940 Reference clock for grayscale PWM control
 
+int LED[96];
+
 void setup() 
 {
-//Defining Arduino pins as output
-pinMode(SIN,   OUTPUT);    
-pinMode(SCLK,  OUTPUT); 
-pinMode(XLAT,  OUTPUT);    
-pinMode(BLANK, OUTPUT);     
-pinMode(GSCLK, OUTPUT); 
+  //Defining Arduino pins as output
+  pinMode(SIN,   OUTPUT);    
+  pinMode(SCLK,  OUTPUT); 
+  pinMode(XLAT,  OUTPUT);    
+  pinMode(BLANK, OUTPUT);     
+  pinMode(GSCLK, OUTPUT); 
 
 
-while (!digitalRead(A0));
-  
-//setAllLEDvalue(0);
-setSingleLED(2000, 0 , 0);
-setSingleLED(2000, 0 , 16);
-setSingleLED(2000, 6, 1);
-setSingleLED(2000, 5 , 7);
+  while (!digitalRead(A0));
+    
+  for (int i=0; i<96; i++) 
+  { 
+    LED[i] = 0;
+  }  
 
+  //setAllLEDvalue(0);
+  setSingleLED(2000, 0 , 0);
+  setSingleLED(2000, 0 , 15);
 
-// Tell TLC5940 we're done
-digitalWrite(XLAT, HIGH);
-digitalWrite(XLAT, LOW); 
+  // Tell TLC5940 we're done
+  digitalWrite(XLAT, HIGH);
+  digitalWrite(XLAT, LOW); 
 }
 
 void loop()
@@ -40,19 +44,19 @@ run_pwm_cycle();
 }
 
 void run_pwm_cycle(){
-//The grayscale PWM cycle starts with the falling edge of BLANK.
-digitalWrite(BLANK, HIGH);    
-digitalWrite(BLANK, LOW);
+  //The grayscale PWM cycle starts with the falling edge of BLANK.
+  digitalWrite(BLANK, HIGH);    
+  digitalWrite(BLANK, LOW);
 
-//Counts a full PWM cycle. A BLANK=H signal after 4096 GSCLK pulses resets the grayscale counter to zero and completes the grayscale PWM cycle 
-for (int i=0; i<4096; i++) 
-  {
-    //PORTC maps to Arduino analog pins 0 to 5
-    PORTC = B01000000;
-    PORTC = B00000000;
+  //Counts a full PWM cycle. A BLANK=H signal after 4096 GSCLK pulses resets the grayscale counter to zero and completes the grayscale PWM cycle 
+  for (int i=0; i<4096; i++) 
+    {
+      //PORTC maps to Arduino analog pins 0 to 5
+      PORTC = B01000000;
+      PORTC = B00000000;
+    }
+  delay(1);
   }
-delay(1);
-}
 
 void setAllLEDvalue( int brightnessvalue )
 {
@@ -98,11 +102,7 @@ void setSingleLED(int brightnessvalue, int led_bank_pos, int led_pos){
 
   //Sets a single diode value to brightnessvalue. "Brightness in % = (brightnessValue/4095) * 100"
   //Mapping all LED on panel in a vector
-  int LED[96];
-  for (int i=0; i<96; i++) 
-  { 
-    LED[i] = 0;
-  }
+
 
   int LEDno=0;
   for (int led_bank = 0; led_bank < 6; led_bank++)

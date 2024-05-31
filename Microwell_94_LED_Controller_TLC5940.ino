@@ -33,18 +33,10 @@ void setup()
 
   //setAllLEDvalue(4095);
 
-  setSingleLED(2000, 0 , 0);
-  setSingleLED(2000, 0 , 15);
-  setSingleLED(2000, 1 , 1);
-  setSingleLED(2000, 1 , 14);
-  setSingleLED(2000, 2 , 2);
-  setSingleLED(2000, 2 , 13);
-  setSingleLED(2000, 3 , 3);
-  setSingleLED(2000, 3 , 12);
-  setSingleLED(2000, 4 , 4);
-  setSingleLED(2000, 4 , 11);
-  setSingleLED(2000, 5 , 5);
-  setSingleLED(2000, 5 , 10);
+  //setSingleLED(2000, 0 , 0);
+
+  //setColumnLED(value, col_start, col_end)
+
 
 
 

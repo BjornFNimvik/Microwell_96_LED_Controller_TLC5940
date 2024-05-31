@@ -10,7 +10,7 @@
 #define BLANK   10    //TLC5940 Blank all outputs. When BLANK = H, all OUTn outputs are forced OFF.G S counter is also reset. When BLANK = L, OUTn are controlled by grayscale PWM control.
 #define GSCLK   5     //TLC5940 Reference clock for grayscale PWM control
 
-int LED[96];
+int LED[96]; //Array for storing individual LED light level value
 
 void setup() 
 {
@@ -20,19 +20,35 @@ void setup()
   pinMode(XLAT,  OUTPUT);    
   pinMode(BLANK, OUTPUT);     
   pinMode(GSCLK, OUTPUT); 
-
-
   while (!digitalRead(A0));
-    
+  
+
   for (int i=0; i<96; i++) 
   { 
     LED[i] = 0;
   }  
 
-  //setAllLEDvalue(0);
+//---------------Program LED here----------------------
+//Functions accept integer input 0 to 4095, brightness % = input/4095
+
+  //setAllLEDvalue(4095);
+
   setSingleLED(2000, 0 , 0);
   setSingleLED(2000, 0 , 15);
+  setSingleLED(2000, 1 , 1);
+  setSingleLED(2000, 1 , 14);
+  setSingleLED(2000, 2 , 2);
+  setSingleLED(2000, 2 , 13);
+  setSingleLED(2000, 3 , 3);
+  setSingleLED(2000, 3 , 12);
+  setSingleLED(2000, 4 , 4);
+  setSingleLED(2000, 4 , 11);
+  setSingleLED(2000, 5 , 5);
+  setSingleLED(2000, 5 , 10);
 
+
+
+//-----------------------------------------------------
   // Tell TLC5940 we're done
   digitalWrite(XLAT, HIGH);
   digitalWrite(XLAT, LOW); 
@@ -60,15 +76,16 @@ void run_pwm_cycle(){
 
 void setAllLEDvalue( int brightnessvalue )
 {
-  int LED[96];
-  for (int i=0; i<96; i++) 
-  { 
-    LED[i] = 0;
-  }
+  //int brightnessvalue = ((brightnessvalue_pcnt/100) * 4095);
+
+  //int LED[96];
+  //for (int i=0; i<96; i++) 
+  //{ 
+  // LED[i] = 0;
+  //}
 
   int LEDno=0;
   //int brightnessValue accepts values from 0 - 4095. Lightlevel is calculated by equation "Brightness in % = (brightnessValue/4095) * 100"
-  //int brightnessValue = 0;
   //Iterating through each LED bank
   for (int bank = 0; bank < 6; bank++)
    {

@@ -29,13 +29,15 @@ void setup()
   }  
 
 //---------------Program LED here----------------------
-//Functions accept integer input 0 to 4095. Funtion sets brightness % = input/4095
+//Functions accept integer input 0 to 4095.  brightness % = input/4095
 
-  //setAllLED(0);
+  //setAllLED(1000);
 
   //setSingleLED(2000, 0 , 0);
 
-  setColumnLED(500, 1, 4);
+  setColumnLED(0, 0, 3);
+  setColumnLED(500, 4, 8);
+  setColumnLED(2000, 9, 14);
 
 
 

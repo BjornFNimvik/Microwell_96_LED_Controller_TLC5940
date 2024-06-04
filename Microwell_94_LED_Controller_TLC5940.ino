@@ -29,13 +29,13 @@ void setup()
   }  
 
 //---------------Program LED here----------------------
-//Functions accept integer input 0 to 4095, brightness % = input/4095
+//Functions accept integer input 0 to 4095. Funtion sets brightness % = input/4095
 
-  //setAllLEDvalue(4095);
+  //setAllLED(0);
 
   //setSingleLED(2000, 0 , 0);
 
-  //setColumnLED(value, col_start, col_end)
+  setColumnLED(500, 1, 4);
 
 
 
@@ -51,22 +51,34 @@ void loop()
 run_pwm_cycle();
 }
 
-void run_pwm_cycle(){
-  //The grayscale PWM cycle starts with the falling edge of BLANK.
-  digitalWrite(BLANK, HIGH);    
-  digitalWrite(BLANK, LOW);
-
-  //Counts a full PWM cycle. A BLANK=H signal after 4096 GSCLK pulses resets the grayscale counter to zero and completes the grayscale PWM cycle 
-  for (int i=0; i<4096; i++) 
-    {
-      //PORTC maps to Arduino analog pins 0 to 5
-      PORTC = B01000000;
-      PORTC = B00000000;
+void setColumnLED(int brightnessvalue, int col_start, int col_end ){
+  int LEDno = 0;
+  for (col_start; col_start <= col_end; col_start++){
+    //iterate through columns
+    for (int LEDinCol = 0; LEDinCol < 8; LEDinCol++){
+      //iterate through LED in column
+      LEDno = (8 * col_start) + LEDinCol;
+      LED[LEDno] = brightnessvalue;
     }
-  delay(1);
   }
 
-void setAllLEDvalue( int brightnessvalue )
+  // Send levels to TLC5940 in backwards order. 
+  for (int i = 95; i >= 0; i--) {
+    // Shift out bits in reverse order    
+    for (int j = 0; j < 12; j++) {
+      //Takes int value in LED[i], 
+      int x = (LED[i] << j) & 0x800; // hex 800 = bit 12
+      // Write bit to TLC5940
+      digitalWrite(SIN, x > 0);  
+      digitalWrite(SCLK, HIGH);
+      digitalWrite(SCLK, LOW);
+    }
+  } 
+
+}
+
+
+void setAllLED( int brightnessvalue )
 {
   //int brightnessvalue = ((brightnessvalue_pcnt/100) * 4095);
 
@@ -132,7 +144,6 @@ void setSingleLED(int brightnessvalue, int led_bank_pos, int led_pos){
     for (int j = 0; j < 12; j++) {
       //Takes int value in LED[i], 
       int x = (LED[i] << j) & 0x800; // hex 800 = bit 12
-      Serial.println(x);
       // Write bit to TLC5940
       digitalWrite(SIN, x > 0);  
       digitalWrite(SCLK, HIGH);
@@ -140,3 +151,18 @@ void setSingleLED(int brightnessvalue, int led_bank_pos, int led_pos){
     }
   } 
 }
+
+void run_pwm_cycle(){
+  //The grayscale PWM cycle starts with the falling edge of BLANK.
+  digitalWrite(BLANK, HIGH);    
+  digitalWrite(BLANK, LOW);
+
+  //Counts a full PWM cycle. A BLANK=H signal after 4096 GSCLK pulses resets the grayscale counter to zero and completes the grayscale PWM cycle 
+  for (int i=0; i<4096; i++) 
+    {
+      //PORTC maps to Arduino analog pins 0 to 5
+      PORTC = B01000000;
+      PORTC = B00000000;
+    }
+  delay(1);
+  }

@@ -29,18 +29,14 @@ void setup()
   }  
 
 //---------------Program LED here----------------------
-//Functions accept integer input 0 to 4095.  brightness % = input/4095
+//Functions accept integer input 0 to 4095.  Lightlevel is calculated by equation "LED Brightness in % = (input/4095) * 100"
 
   //setAllLED(1000);
-
   //setSingleLED(2000, 0 , 0);
-
+  
   setColumnLED(0, 0, 3);
   setColumnLED(500, 4, 8);
-  setColumnLED(2000, 9, 14);
-
-
-
+  setColumnLED(2000, 8, 10);
 
 //-----------------------------------------------------
   // Tell TLC5940 we're done
@@ -50,10 +46,12 @@ void setup()
 
 void loop()
 {
+  //This code always runs, to keep the LEDs turned on.
 run_pwm_cycle();
 }
 
 void setColumnLED(int brightnessvalue, int col_start, int col_end ){
+  //Functions controlls the brightness level of a single column, going from 0 to 11 (12 columns).
   int LEDno = 0;
   for (col_start; col_start <= col_end; col_start++){
     //iterate through columns
@@ -81,17 +79,9 @@ void setColumnLED(int brightnessvalue, int col_start, int col_end ){
 
 
 void setAllLED( int brightnessvalue )
-{
-  //int brightnessvalue = ((brightnessvalue_pcnt/100) * 4095);
-
-  //int LED[96];
-  //for (int i=0; i<96; i++) 
-  //{ 
-  // LED[i] = 0;
-  //}
-
+{ //Functions controlls the brightness level of the entire board (94 LED) 
   int LEDno=0;
-  //int brightnessValue accepts values from 0 - 4095. Lightlevel is calculated by equation "Brightness in % = (brightnessValue/4095) * 100"
+  
   //Iterating through each LED bank
   for (int bank = 0; bank < 6; bank++)
    {
@@ -122,9 +112,9 @@ void setAllLED( int brightnessvalue )
 }
 
 void setSingleLED(int brightnessvalue, int led_bank_pos, int led_pos){
+  //Functions controlls the brightness level of a single LED (1 LED) 
+  
 
-  //Sets a single diode value to brightnessvalue. "Brightness in % = (brightnessValue/4095) * 100"
-  //Mapping all LED on panel in a vector
 
 
   int LEDno=0;
